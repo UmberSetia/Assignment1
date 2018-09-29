@@ -1,0 +1,68 @@
+#ToolBar {
+	-fx-min-width: 50px;
+}
+
+#Room, #Erase, #Path, #Door, #Move, #Select {
+	-fx-min-height: 40px;
+	-fx-min-width: 40px;
+	-fx-background-color: transparent ;
+	-fx-background-size: contain ;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+#Room {
+	-fx-background-image: url("../icons/40xp/plans.png");
+}
+#Select {
+	-fx-background-image: url("../icons/40xp/cursor.png");
+}
+#Move {
+	-fx-background-image: url("../icons/40xp/move.png");
+}
+#Erase {
+	-fx-background-image: url("../icons/40xp/eraser.png");
+}
+#Path {
+	-fx-background-image: url("../icons/40xp/road.png");
+}
+#Door {
+	-fx-background-image: url("../icons/40xp/doorway.png");
+}
+#Room:hover, #Erase:hover, #Path:hover, #Door:hover, #Move:hover, #Select:hover {
+	-fx-background-color: lightgray ;
+}
+#Room:pressed, #Erase:pressed, #Path:pressed, #Door:pressed, #Move:pressed, #Select:pressed {
+	-fx-background-color: gray ;
+}
+
+#Save-icon, #Credit-icon, #New-icon, #Info-icon, #Exit-icon, #Help-icon {
+	-fx-min-height: 20px;
+	-fx-min-width: 20px;
+	-fx-background-color: transparent ;
+	-fx-background-size: contain ;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+#Save-icon {
+	-fx-background-image: url("../icons/20xp/save.png");
+}
+#Credit-icon {
+	-fx-background-image: url("../icons/20xp/open-book.png");
+}
+#New-icon {
+	-fx-background-image: url("../icons/20xp/new-file.png");
+}
+#Exit-icon {
+	-fx-background-image: url("../icons/20xp/exit.png");
+}
+#Info-icon {
+	-fx-background-image: url("../icons/20xp/information.png");
+}
+#Help-icon {
+	-fx-background-image: url("../icons/20xp/question.png");
+}
+
+/*hide arrow of MenuButton*/
+#Room > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
