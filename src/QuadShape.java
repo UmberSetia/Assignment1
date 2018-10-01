@@ -8,8 +8,7 @@ public class QuadShape extends Rectangle{
 	public QuadShape(){
 		super();
 		setOpacity(1);
-		setStrokeWidth(2);
-		setStroke( Color.LIGHTGREEN);
+		setStroke( Color.GREY);
 		setFill( Color.LIGHTGREEN);
 	}
 

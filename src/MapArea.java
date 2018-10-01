@@ -2,14 +2,13 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 
 public class MapArea extends Pane{
 	
 	private Shape activeShape;
-	private double startX, startY;
+	private double startX, startY, oldX, oldY;
 	private ObservableList<Node> children;
 	private ToolState tool;
 	private SelectionArea selectArea;
@@ -35,6 +34,9 @@ public class MapArea extends Pane{
 		e.consume();
 		startX = e.getX();
 		startY = e.getY();
+		oldX = e.getX();
+		oldY = e.getY();
+		
 		switch(activeTool())
 		{
 			case Door:
@@ -54,7 +56,10 @@ public class MapArea extends Pane{
 				} else if (o == 4) {
 					activeShape = new QuadShape();
 					((QuadShape) activeShape).start(startX, startY);
-				}				
+				} else {
+					activeShape = new PolyShape(o);
+					((PolyShape) activeShape).getControlPoints();
+				}
 				children.add(activeShape);
 				break;
 		default:
@@ -81,6 +86,8 @@ public class MapArea extends Pane{
 				((Line) activeShape).setEndY(e.getY());
 			} else if (o == 4) {
 				((QuadShape) activeShape).end(startX, startY);
+			} else {
+				((PolyShape) activeShape).reDraw(startX, startY, distance(oldX, oldY, startX, startY));
 			}
 			break;
 		default:
@@ -102,8 +109,14 @@ public class MapArea extends Pane{
 			children.remove(selectArea);
 			break;
 		case Erase:
+		case Room: 
+			break;
 		default:
 			break;
 		}
+	}
+	
+	private double distance( double x1, double y1, double x2, double y2){
+	    return Math.sqrt((x2-x1) * (x2-x1) + (y2-y1) * (y2-y1));
 	}
 }
