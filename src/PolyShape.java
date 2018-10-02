@@ -44,7 +44,7 @@ public class PolyShape extends Polygon{
 		return radius * operation.applyAsDouble( shift + side * 2.0 * Math.PI / SIDES);
 	}
 
-	private void registerControlPoints(){
+	public void registerControlPoints(){
 		//to register control points create an array of control points,
 		//have in mind every two points the polygon class getPoints() counts as one control point.
 
@@ -56,29 +56,16 @@ public class PolyShape extends Polygon{
 		
 		//each ChangeListener will updated the corresponding index inside of the Polygon getPoints().
 		
-		//cPoints = new ControlPoint[this.sides];
-		
+		cPoints = new ControlPoint[pPoints.size()/2];
 		for (int i = 0; i < pPoints.size(); i+=2) {
 			final int index = i;
-			DoubleProperty centerXProperty = new SimpleDoubleProperty(pPoints.get(i));
-			DoubleProperty centerYProperty = new SimpleDoubleProperty(pPoints.get(i+1));
+			double centerXProperty = pPoints.get(i);
+			double centerYProperty = pPoints.get(i+1);
 			
-			centerXProperty.addListener(new ChangeListener<Number>() {
-		        @Override 
-		        public void changed(ObservableValue<? extends Number> observable, Number oldXValue, Number newXValue) {
-		        	pPoints.set(index, (Double) newXValue);
-		        }
-						
-			});
-			
-			centerYProperty.addListener(new ChangeListener<Number>() {
-		        @Override 
-		        public void changed(ObservableValue<? extends Number> observable, Number oldYValue, Number newYValue) {
-		        	pPoints.set(index+1, (Double) newYValue);
-		        }
-						
-			});
-			this.cPoints[i] = new ControlPoint(centerXProperty,centerYProperty);
+		    pPoints.set(index, newXValue.doubleValue());		    	
+		    pPoints.set(index+1, newYValue.doubleValue());
+
+			this.cPoints[i/2] = new ControlPoint(centerXProperty,centerYProperty);
 		}
 				
 	}

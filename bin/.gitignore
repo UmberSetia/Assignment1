@@ -1,7 +1,4 @@
-/MapArea.class
-/MapMaker.class
-/PolyShape.class
-/QuadShape.class
-/SelectionArea.class
-/Tool.class
-/ToolState.class
+/ControlPoint$Delta.class
+/ControlPoint.class
+/PolyShape$1.class
+/PolyShape$2.class

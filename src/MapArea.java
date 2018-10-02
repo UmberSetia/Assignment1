@@ -2,12 +2,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
+
 
 public class MapArea extends Pane{
 	
-	private Shape activeShape;
+	private PolyShape activeShape;
 	private double startX, startY, oldX, oldY;
 	private ObservableList<Node> children;
 	private ToolState tool;
@@ -50,16 +49,7 @@ public class MapArea extends Pane{
 			case Erase:
 				break;
 			case Room: 
-				int o = tool.getOption();
-				if (o == 2) {
-					activeShape = new Line(startX,startY,startX,startY);
-				} else if (o == 4) {
-					activeShape = new QuadShape();
-					((QuadShape) activeShape).start(startX, startY);
-				} else {
-					activeShape = new PolyShape(o);
-					((PolyShape) activeShape).getControlPoints();
-				}
+				activeShape = new PolyShape(tool.getOption());
 				children.add(activeShape);
 				break;
 		default:
@@ -79,20 +69,10 @@ public class MapArea extends Pane{
 			break;
 		case Erase:
 		case Room: 
-			int o = tool.getOption();
-			if (o == 2) {
-				if (activeShape == null) break;
-				((Line) activeShape).setEndX(e.getX());
-				((Line) activeShape).setEndY(e.getY());
-			} else if (o == 4) {
-				((QuadShape) activeShape).end(startX, startY);
-			} else {
-				((PolyShape) activeShape).reDraw(startX, startY, distance(oldX, oldY, startX, startY));
-			}
+			activeShape.reDraw(startX, startY, distance(oldX, oldY, startX, startY));
 			break;
 		default:
-			break;
-			
+			break;			
 		}
 		startX = e.getX();
 		startY = e.getY();
@@ -110,6 +90,7 @@ public class MapArea extends Pane{
 			break;
 		case Erase:
 		case Room: 
+			children.addAll(activeShape.getControlPoints());
 			break;
 		default:
 			break;

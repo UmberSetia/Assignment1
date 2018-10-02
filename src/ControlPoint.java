@@ -7,9 +7,11 @@ class ControlPoint extends Circle {
 		private DoubleProperty x,y;
 		final Delta delta = new Delta();
 		
-		ControlPoint(DoubleProperty x, DoubleProperty y){
-			this.x = x;
-			this.y = y;
+		ControlPoint(double x, double y){
+			super();
+			super.setRadius(4);
+			super.setCenterX(x);
+			super.setCenterY(y);
 					
 			setFill(Color.GREY);
 			setStroke(Color.GREY);
