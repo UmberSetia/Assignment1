@@ -2,6 +2,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 
 public class MapArea extends Pane{
@@ -49,6 +50,7 @@ public class MapArea extends Pane{
 			case Erase:
 				break;
 			case Room: 
+				
 				activeShape = new PolyShape(tool.getOption());
 				children.add(activeShape);
 				break;
@@ -87,10 +89,14 @@ public class MapArea extends Pane{
 		case Path:
 		case Select:
 			children.remove(selectArea);
+			if (selectArea.contains(activeShape)) {
+				activeShape.shapeColor(Color.RED);
+			} //throws NullPointerException
 			break;
 		case Erase:
 		case Room: 
-			children.addAll(activeShape.getControlPoints());
+			activeShape.registerControlPoints();
+            children.addAll((activeShape).getControlPoints());
 			break;
 		default:
 			break;

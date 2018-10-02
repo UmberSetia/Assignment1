@@ -1,11 +1,6 @@
 
 
 import java.util.function.DoubleUnaryOperator;
-
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -23,10 +18,20 @@ public class PolyShape extends Polygon{
 		this.sides = sides;
 		pPoints = this.getPoints();
 		
-		setFill(Color.LIGHTGREEN);
-		setStroke(Color.GREY);
+		shapeColor(Color.LIGHTGREEN);
+		shapeStroke(Color.GREY);
+		
 		registerControlPoints();
 	}
+	
+	public void shapeColor(Color color) {
+		this.setFill(color);
+	}
+	
+	public void shapeStroke(Color color) {
+		this.setStroke(color);
+	}
+	
 
 	private void calculatePoints( double x, double y, double radius){
 		final double shift = radianShift( sides);
@@ -45,33 +50,21 @@ public class PolyShape extends Polygon{
 	}
 
 	public void registerControlPoints(){
-		//to register control points create an array of control points,
-		//have in mind every two points the polygon class getPoints() counts as one control point.
-
-		//loop through all points of polygon getPoints() index by index,
-		//again dont forget every 2 indices are considered one control point.
-				
-		//for every two indices manually add a ChangeListener to centerXProperty and centerYProperty
-		//of your control point which extends Circle.
 		
-		//each ChangeListener will updated the corresponding index inside of the Polygon getPoints().
-		
-		cPoints = new ControlPoint[pPoints.size()/2];
+		this.cPoints = new ControlPoint[pPoints.size()/2];
 		for (int i = 0; i < pPoints.size(); i+=2) {
 			final int index = i;
-			double centerXProperty = pPoints.get(i);
-			double centerYProperty = pPoints.get(i+1);
+			cPoints[i/2] = new ControlPoint(pPoints.get(i), pPoints.get(i+1));
 			
-		    pPoints.set(index, newXValue.doubleValue());		    	
-		    pPoints.set(index+1, newYValue.doubleValue());
-
-			this.cPoints[i/2] = new ControlPoint(centerXProperty,centerYProperty);
+		    this.cPoints[i/2].addChangeListener(
+		    		(value, oldV, newV) -> pPoints.set(index, newV.doubleValue()),
+		    		(value, oldV, newV) -> pPoints.set(index+1, newV.doubleValue())
+		    		);	    
 		}
 				
 	}
 
 	public void reDraw( double x, double y, double radius){
-		//clear your points then calculate the points again
 		pPoints.clear();
 		calculatePoints(x,y,radius);
 	}
