@@ -42,6 +42,9 @@ public class SelectionArea extends Rectangle{
 	}
 
 	public boolean contains( Node node){
+		if (!(node instanceof ControlPoint)) {
+			return false;
+		}
 		return getBoundsInLocal().contains( node.getBoundsInLocal());
 	}
 

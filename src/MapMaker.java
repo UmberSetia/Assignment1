@@ -25,6 +25,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class MapMaker extends Application{
@@ -34,16 +35,18 @@ public class MapMaker extends Application{
 	public static final String CREDITS_PATH = "resources/icons/credits.txt";
 	public static final String CSS_PATH = "resources/css/style.css";
 	Label selectedTool = new Label("Tool: ");
+	FileChooser fc = new FileChooser();
 	@Override
 	public void init() throws Exception {
 		super.init();
+		
 	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		BorderPane rootPane = new BorderPane();
 		
-		MapArea mapArea = new MapArea();	
+		MapArea mapArea = new MapArea();			
 		rootPane.setCenter(mapArea);
 		
 		MenuBar menuBar = new MenuBar(

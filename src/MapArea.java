@@ -1,23 +1,28 @@
 import javafx.collections.ObservableList;
+import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 
 
 public class MapArea extends Pane{
 	
 	private PolyShape activeShape;
-	private double startX, startY, oldX, oldY;
+	private double initialX, initialY;
 	private ObservableList<Node> children;
 	private ToolState tool;
 	private SelectionArea selectArea;
+	public String[] shapeName;
+	public int iteration;
 	
 	public MapArea() {
 		super();
 		tool = ToolState.getState();
 		children = this.getChildren();
 		registerMouseEvents();
+		this.setStyle("-fx-background-color: white");
 	}
 	
 	public void registerMouseEvents() {
@@ -31,26 +36,25 @@ public class MapArea extends Pane{
 	}
 
 	public void pressed(MouseEvent e) {
-		e.consume();
-		startX = e.getX();
-		startY = e.getY();
-		oldX = e.getX();
-		oldY = e.getY();
+
+		initialX = e.getX();
+		initialY = e.getY();
 		
 		switch(activeTool())
 		{
-			case Door:
+			case Door: break;
 			case Move:
-			case Path:
+				break;
+			case Path: break;
 			case Select:
 				selectArea = new SelectionArea();
-				selectArea.start(startX, startY);
+				selectArea.start(initialX, initialY);
 				children.add(selectArea);
 				break;
 			case Erase:
+				removeShape(e);
 				break;
-			case Room: 
-				
+			case Room: 			
 				activeShape = new PolyShape(tool.getOption());
 				children.add(activeShape);
 				break;
@@ -60,50 +64,70 @@ public class MapArea extends Pane{
 	}
 
 	public void dragged(MouseEvent e) {
-		e.consume();
 		switch(tool.getTool()) 
 		{
-		case Door:
+		case Door: break;
 		case Move:
-		case Path:
-		case Select:
-			selectArea.end(startX, startY);
+			if (e.getTarget() instanceof ControlPoint) {
+				moveControlPoint(e.getTarget(),e);
+			} 
+			if (e.getTarget() instanceof PolyShape) {
+				moveShape(e.getTarget(),e);
+			}			
+			initialX = e.getX();
+			initialY = e.getY();		
 			break;
-		case Erase:
+		case Path: break;
+		case Select:
+			selectArea.end(e.getX(), e.getY());
+			break;
+		case Erase: break;
 		case Room: 
-			activeShape.reDraw(startX, startY, distance(oldX, oldY, startX, startY));
+			activeShape.reDraw(initialX, initialY, e.getX(), e.getY(), true);	
 			break;
 		default:
 			break;			
 		}
-		startX = e.getX();
-		startY = e.getY();
-		
-		
 	}
 	
-	public void released(MouseEvent e) {
+
+	public void released(MouseEvent e) {		
 		switch(tool.getTool()) {
-		case Door:
-		case Move:
-		case Path:
+		case Door: break;
+		case Move: break;
+		case Path: break;
 		case Select:
-			children.remove(selectArea);
-			if (selectArea.contains(activeShape)) {
-				activeShape.shapeColor(Color.RED);
-			} //throws NullPointerException
+			selectArea.containsAny(children,(t)->{
+				//((Shape) t).setFill(Color.BLACK);
+			});
+			children.remove(selectArea);		
 			break;
-		case Erase:
+		case Erase: break;
 		case Room: 
 			activeShape.registerControlPoints();
-            children.addAll((activeShape).getControlPoints());
+            children.addAll(activeShape.getControlPoints());
+            shapeName[iteration++] = activeShape.toString();
 			break;
 		default:
 			break;
 		}
 	}
 	
-	private double distance( double x1, double y1, double x2, double y2){
-	    return Math.sqrt((x2-x1) * (x2-x1) + (y2-y1) * (y2-y1));
+	private void removeShape(MouseEvent e) {
+		children.removeAll(((PolyShape) e.getTarget()).getControlPoints());
+		children.remove(e.getTarget());
+		
 	}
+	
+	private void moveControlPoint(EventTarget eventTarget, MouseEvent e) {
+		((ControlPoint) eventTarget).translate(e.getX()-initialX,e.getY()-initialY);
+	}
+	
+	private void moveShape(EventTarget eventTarget, MouseEvent e) {
+		Node[] cPoints = ((PolyShape) eventTarget).getControlPoints();
+		for(int i = 0; i < cPoints.length; i++) {
+			((ControlPoint) cPoints[i]).translate(e.getX()-initialX,e.getY()-initialY);
+		}
+	}
+	
 }
