@@ -52,6 +52,7 @@ public class MapMaker extends Application{
 		MenuBar menuBar = new MenuBar(
 				new Menu("File", null, 
 						createMenuItem("New", (e)->{}), 
+						//createMenuItem("Open", (e)->{}),
 						createMenuItem("Save", (e)->{}),
 						new SeparatorMenuItem(),
 						createMenuItem("Exit", (e)->{Platform.exit();})),
@@ -120,26 +121,11 @@ public class MapMaker extends Application{
 		Label roomIcon = new Label();
 		roomIcon.setId("Room-icon");
 		MenuButton item = new MenuButton("", roomIcon,
-				createMenuItem("Line", 
-						(e)->{ToolState.getState().setTool(Tool.Room);
-						selectedTool.setText("Tool: Room: Line");
-						ToolState.getState().setOption(2);}),
-				createMenuItem("Triangle", 
-						(e)->{ToolState.getState().setTool(Tool.Room);
-						selectedTool.setText("Tool: Room: Triangle");
-						ToolState.getState().setOption(3);}),
-				createMenuItem("Rectangle", 
-						(e)->{ToolState.getState().setTool(Tool.Room);
-						selectedTool.setText("Tool: Room: Rectangle");
-						ToolState.getState().setOption(4);}),
-				createMenuItem("Pentagon", 
-						(e)->{ToolState.getState().setTool(Tool.Room);
-						selectedTool.setText("Tool: Room: Pentagon");
-						ToolState.getState().setOption(5);}),
-				createMenuItem("Hexagon", 
-						(e)->{ToolState.getState().setTool(Tool.Room);
-						selectedTool.setText("Tool: Room: Hexagon");
-						ToolState.getState().setOption(6);}));
+				createMenuItem("Line",(e)->{setRoomTool("Line", 2);}),
+				createMenuItem("Triangle",(e)->{setRoomTool("Triangle", 3);}),
+				createMenuItem("Rectangle",(e)->{setRoomTool("Rectangle", 4);}),
+				createMenuItem("Pentagon",(e)->{setRoomTool("Pentagon", 5);}),
+				createMenuItem("Hexagon",(e)->{setRoomTool("Hexagon", 6);}));
 		item.setId("Room");
 		item.setPopupSide(Side.RIGHT);
 		item.setOnAction(handler);
@@ -164,6 +150,12 @@ public class MapMaker extends Application{
 		return item;
 	}
 	
+	private void setRoomTool(String name, int option) {
+		ToolState.getState().setTool(Tool.Room);
+		selectedTool.setText("Tool: Room: " + name);
+		ToolState.getState().setOption(option);
+	}
+
 	private void displayAlert( String title, String context) {
 		Alert alert = new Alert( AlertType.INFORMATION);
 		alert.setTitle(title);
